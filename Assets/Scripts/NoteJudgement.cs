@@ -16,7 +16,6 @@ public class NoteJudgement : MonoBehaviour
     [SerializeField] private float perfectInterval;
     [SerializeField] private float goodInterval;
 
-    private int combo;
     // total notes successfully hit
     private int totalNotesHit;
     // total notes passed by, whether hit or not
@@ -26,6 +25,7 @@ public class NoteJudgement : MonoBehaviour
     [Header("Moving Trigger Line")]
     // trigger line moving though idk if we should keep this
     [SerializeField] private bool movingTriggerLine;
+    [SerializeField] private ScoreData scoreData;
     [SerializeField] private int maxColumns;
     [SerializeField] private float originTriggerXPos;
     [SerializeField] private float columnSpacing;
@@ -47,7 +47,8 @@ public class NoteJudgement : MonoBehaviour
 
     private void NoteMissed(Transform noteTransform)
     {
-        combo = 0;
+        scoreData.combo = 0;
+        scoreData.flowstate = 1;
         accuracyText.text = "MISS";
         AdvanceTriggerLine();
     }
@@ -63,13 +64,20 @@ public class NoteJudgement : MonoBehaviour
         if (absDistance <= perfectInterval)
         {
             accuracyText.text = distance + ": Perfect";
+            scoreData.flowstate += 0.03f;
+            scoreData.score += Mathf.Floor(50 * scoreData.flowstate);
         } else if (absDistance <= goodInterval)
         {
             accuracyText.text = distance + ": Good";
+            scoreData.flowstate += 0.02f;
+            scoreData.score += Mathf.Floor(30 * scoreData.flowstate);
         } else
         {
             accuracyText.text = distance + ": Bad";
+            scoreData.flowstate += 0.01f;
+            scoreData.score += Mathf.Floor(10 * scoreData.flowstate);
         }
+        scoreData.combo += 1;
         musicNotesInTriggerLine.RemoveAt(0);
         Destroy(incomingNote.gameObject);
         AdvanceTriggerLine();
