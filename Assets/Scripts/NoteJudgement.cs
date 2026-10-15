@@ -78,6 +78,7 @@ public class NoteJudgement : MonoBehaviour
             scoreData.score += Mathf.Floor(10 * scoreData.flowstate);
         }
         scoreData.combo += 1;
+        scoreData.CheckHighScore();
         musicNotesInTriggerLine.RemoveAt(0);
         Destroy(incomingNote.gameObject);
         AdvanceTriggerLine();

@@ -7,6 +7,7 @@ public class ScoreData : ScriptableObject
     //score multiplier
     public float flowstate;
     public float combo;
+    public float highscore;
     //A-F score cutoffs, cutoffs will have to be updated later to make any sence
     public float ACutOff = 30000;
     public float BCutOff = 25000;
@@ -19,5 +20,16 @@ public class ScoreData : ScriptableObject
         score = 0f;
         flowstate = 1f;
         combo = 0f;
+        highscore = PlayerPrefs.GetFloat("HighScore", 0f);
+    }
+    public void CheckHighScore()
+    {
+        if (score > highscore)
+        {
+            highscore = score;
+
+            PlayerPrefs.SetFloat("HighScore", highscore);
+            PlayerPrefs.Save();
+        }
     }
 }
