@@ -10,7 +10,6 @@ using System.Linq;
 public class NoteJudgement : MonoBehaviour
 {
     [SerializeField] private GameObject TriggerLine;
-    public static Action onStartNewNoteRow;
     
     [Header("Judgement Distance Intervals")]
     [SerializeField] private float perfectInterval;
@@ -21,15 +20,17 @@ public class NoteJudgement : MonoBehaviour
     private int totalNotesHit;
     // total notes passed by, whether hit or not
     private int totalNotesAdvanced;
+    private bool songActive;
     private List<Transform> musicNotesInTriggerLine = new List<Transform>();
 
     [Header("Moving Trigger Line")]
-    // trigger line moving though idk if we should keep this
-    [SerializeField] private bool movingTriggerLine;
-    [SerializeField] private int maxColumns;
-    [SerializeField] private float originTriggerXPos;
-    [SerializeField] private float columnSpacing;
-    private int columnIndex = 0;
+    private float startX;
+    private float startY;
+    private float endX;
+    [SerializeField] private int maxRows;
+    [SerializeField] private float rowSpacing;
+    private float lineSpeed;
+    private int rowIndex;
 
     // maybe delete this later
     [Header("UI References")]
@@ -37,19 +38,62 @@ public class NoteJudgement : MonoBehaviour
 
     private void OnEnable()
     {
-        MusicNote.onNoteMissed += NoteMissed;
+        SongManager.onSongStarted += SongStarted;
     }
 
     private void OnDisable()
     {
-        MusicNote.onNoteMissed -= NoteMissed;
+        SongManager.onSongStarted -= SongStarted;
     }
 
-    private void NoteMissed(Transform noteTransform)
+    private void Awake()
+    {
+        Physics2D.callbacksOnDisable = false;
+    }
+
+    private void Start()
+    {
+        SongManager songManager = SongManager.instance;
+
+        lineSpeed = songManager.LineSpeed;
+        rowSpacing = songManager.RowSpacing;
+        maxRows = songManager.MaxRows;
+        startX = songManager.noteStartPos.x;
+        startY = songManager.noteStartPos.y;
+        endX = songManager.noteEndPos.x;
+    }
+
+    // lerp from start x to end x and reset position once its hit
+    private float timer;
+    private void Update()
+    {
+        if (songActive)
+        {
+            timer = timer + Time.deltaTime * lineSpeed;
+            if (timer > 1)
+            {
+                timer = 0;
+                rowIndex = ++rowIndex % maxRows;
+            }
+            float newY = startY - rowSpacing * rowIndex;
+            
+            Vector3 newPos = Vector2.Lerp(new Vector3(startX, newY, 0), 
+                new Vector3(endX, newY, 0), timer);
+            transform.position = newPos;
+        }
+    }
+
+    private void SongStarted()
+    {
+        songActive = true;
+    }
+
+    // probably won't need miss zone since once the note exits the collider that should count as a miss anyawy
+    private void NoteMissed()
     {
         combo = 0;
         accuracyText.text = "MISS";
-        AdvanceTriggerLine();
+        //AdvanceTriggerLine();
     }
 
     public void OnInteract(InputAction.CallbackContext context)
@@ -57,6 +101,9 @@ public class NoteJudgement : MonoBehaviour
         if (musicNotesInTriggerLine.Count <= 0 || !context.started) return;
 
         Transform incomingNote = musicNotesInTriggerLine[0];
+        musicNotesInTriggerLine.RemoveAt(0);
+        Destroy(incomingNote.gameObject);
+        
         float distance = incomingNote.transform.position.x - TriggerLine.transform.position.x;
         float absDistance = Math.Abs(distance);
 
@@ -70,9 +117,6 @@ public class NoteJudgement : MonoBehaviour
         {
             accuracyText.text = distance + ": Bad";
         }
-        musicNotesInTriggerLine.RemoveAt(0);
-        Destroy(incomingNote.gameObject);
-        AdvanceTriggerLine();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -81,24 +125,15 @@ public class NoteJudgement : MonoBehaviour
         {
             musicNotesInTriggerLine.Add(collision.transform);
         }
-        
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("MusicNote"))
+        if (collision.gameObject != null && collision.CompareTag("MusicNote"))
         {
             musicNotesInTriggerLine.Remove(collision.transform);
-        }
-    }
-
-    private void AdvanceTriggerLine()
-    {
-        if (movingTriggerLine)
-        {
-            columnIndex = ++columnIndex % maxColumns;
-            TriggerLine.transform.position = new Vector3(originTriggerXPos + columnIndex * columnSpacing, 
-                TriggerLine.transform.position.y, 0);
+            NoteMissed();
+            Destroy(collision.gameObject);
         }
     }
 }
