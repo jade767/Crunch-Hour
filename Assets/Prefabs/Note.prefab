@@ -29,14 +29,14 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.25, y: 2.81, z: 0}
-  m_LocalScale: {x: 0.6867, y: 1, z: 1}
+  m_LocalScale: {x: 0.7547488, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1709582598714795615
 SpriteRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -93,6 +93,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!114 &1795387692173089325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,9 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MusicNote
   SpawnPos: {x: 0, y: 0}
-  RemovePos: {x: 0, y: 0}
   BeatOfThisNote: 0
-  BeatsShownInAdvance: 0
 --- !u!61 &5656302644074158389
 BoxCollider2D:
   m_ObjectHideFlags: 0
