@@ -4,11 +4,13 @@ using System;
 public class MusicNote : MonoBehaviour
 {
     public Vector2 SpawnPos;
-    public Vector2 RemovePos;
+    //public Vector2 RemovePos;
     public float BeatOfThisNote;
-    public float BeatsShownInAdvance;
+    //public float BeatsShownInAdvance;
 
-    // Update is called once per frame
+    // i'll need to get rid of this and replace it with a function that determines
+    // the note's position on the screen based on the beat of the note
+    /*
     void Update()
     {
         Vector2 newPos = Vector2.Lerp(
@@ -18,14 +20,5 @@ public class MusicNote : MonoBehaviour
         );
         transform.position = new Vector3(newPos.x, newPos.y, 0);
     }
-
-    public static Action<Transform> onNoteMissed;
-    public void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("MissZone"))
-        {
-            onNoteMissed?.Invoke(transform);
-            Destroy(gameObject);
-        }
-    }
+    */
 }

@@ -19,6 +19,7 @@ public class SongManager : MonoBehaviour
 
     // -- Events --
     public static Action<GameObject> onNoteCreated;
+    public static Action onSongStarted; // should contain a songobject type at some point
 
     [Header("Game Object References")]
     [SerializeField] private GameObject MusicNotePrefab;
@@ -36,6 +37,7 @@ public class SongManager : MonoBehaviour
     private float secPerBeat;
     // how much time (in seconds) has passed since the song started
     private float dsptimesong;
+    private bool songActive;
 
     // -- Song Information -- (should probably make a scriptable object for each song)
 
@@ -49,47 +51,37 @@ public class SongManager : MonoBehaviour
 
     // Note Positioning
     [Header("Note Positioning")]
-    [SerializeField] private int maxRows;
+    
     [SerializeField] private float originYPos;
-    [SerializeField] private float rowSpacing;
     [SerializeField] private int MaxNotesOnLine;
-    private int noteCountOnLine;
-    private int rowIndex = -1;
-    private Vector2 noteStartPos;
-    private Vector2 noteEndPos;
+    [SerializeField] private float noteStartX;
+    public int MaxRows;
+    public float RowSpacing;
+    public float LineSpeed;
+    private float unitsPerBeat;
 
-    private void OnEnable()
-    {
-        NoteJudgement.onStartNewNoteRow += StartNewNoteRow;
-    }
-
-    private void OnDisable()
-    {
-        NoteJudgement.onStartNewNoteRow -= StartNewNoteRow;
-    }
+    //private int rowIndex = -1;
+    public Vector2 noteStartPos;
+    public Vector2 noteEndPos;
+    private float rowLength;
 
     private void Awake()
     {
         musicSource = GetComponent<AudioSource>();
         // not sure if i need to make this a singleton
         instance = this;
-    }
 
-    private void Start()
-    {
         // calculate how many seconds is one beat
         secPerBeat = 60f / bpm;
 
-        // record the time when the song starts
-        dsptimesong = (float) AudioSettings.dspTime;
-
-        StartNewNoteRow();
-        // start the song
-        GetComponent<AudioSource>().Play();
+        // calculate beats per row
+        rowLength = noteEndPos.x - noteStartPos.x;
+        unitsPerBeat = secPerBeat * (rowLength * LineSpeed);
     }
 
     private void Update()
     {
+        if (!songActive) return;
         // calculate the position in seconds
         songPosition = (float) (AudioSettings.dspTime - dsptimesong);
 
@@ -101,29 +93,28 @@ public class SongManager : MonoBehaviour
             GameObject obj = Instantiate(MusicNotePrefab);
             // initialize the fields of the music note
             MusicNote musicNote = obj.GetComponent<MusicNote>();
-            musicNote.SpawnPos = noteStartPos;
-            musicNote.RemovePos = noteEndPos;
-            musicNote.BeatOfThisNote = notes[nextIndex];
-            musicNote.BeatsShownInAdvance = beatsShownInAdvance;
+            float newX = notes[nextIndex] * unitsPerBeat;
+            int rowIndex = (int) (newX / rowLength) % MaxRows;
+            obj.transform.position = noteStartPos + new Vector2(newX % rowLength, 
+                -RowSpacing * rowIndex);
+            //musicNote.BeatOfThisNote = notes[nextIndex];
+            //musicNote.BeatsShownInAdvance = beatsShownInAdvance;
 
             onNoteCreated?.Invoke(obj);
-
-            noteCountOnLine++;
-            if (noteCountOnLine >= MaxNotesOnLine)
-            {
-                noteCountOnLine = 0;
-                StartNewNoteRow();
-            }
 
             nextIndex++;
         }
     }
 
-    private void StartNewNoteRow()
+    public void StartSong()
     {
-        rowIndex = ++rowIndex % maxRows;
-        float yPos = originYPos - rowIndex * rowSpacing;
-        noteStartPos = new Vector2(StartLine.transform.position.x, yPos);
-        noteEndPos = new Vector2(NoteMissZone.transform.position.x, yPos);
+        onSongStarted?.Invoke();
+        
+        // record the time when the song starts
+        dsptimesong = (float) AudioSettings.dspTime;
+
+        // play the song
+        GetComponent<AudioSource>().Play();
+        songActive = true;
     }
 }
