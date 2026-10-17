@@ -108,13 +108,21 @@ public class SongManager : MonoBehaviour
 
     public void StartSong()
     {
+        SongSelect songSelect = FindAnyObjectByType<SongSelect>();
+        if (!songSelect)
+        {
+            Debug.Log("Could not find SongSelect object in scene.");
+            return;
+        }
+        musicSource.generator = songSelect.selectedSong.audioClip;
+
         onSongStarted?.Invoke();
         
         // record the time when the song starts
         dsptimesong = (float) AudioSettings.dspTime;
 
         // play the song
-        GetComponent<AudioSource>().Play();
+        musicSource.Play();
         songActive = true;
     }
 }
