@@ -23,7 +23,6 @@ public class SongManager : MonoBehaviour
 
     [Header("Game Object References")]
     [SerializeField] private GameObject MusicNotePrefab;
-    [SerializeField] private GameObject NoteMissZone;
     [SerializeField] private GameObject StartLine;
     
 

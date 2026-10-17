@@ -485,6 +485,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 346539628}
   m_CullTransparentMesh: 1
+--- !u!1 &515963595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 515963597}
+  - component: {fileID: 515963596}
+  m_Layer: 0
+  m_Name: SongSelect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &515963596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515963595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c65f50d50d8544384a7c138636c3924b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelSelect
+  selectedSong: {fileID: 11400000, guid: a492c8ea554c64546bcd52bb31fa4b5c, type: 2}
+  songNameText: {fileID: 0}
+  difficultyText: {fileID: 0}
+  durationText: {fileID: 0}
+--- !u!4 &515963597
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515963595}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1334.3684, y: 528.34143, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1083,6 +1131,7 @@ MonoBehaviour:
   TriggerLine: {fileID: 1013082147}
   perfectInterval: 0.25
   goodInterval: 0.5
+  scoreData: {fileID: 11400000, guid: 32431a4c3a9a88a4398c73f4a7db4a19, type: 2}
   maxRows: 5
   rowSpacing: 1
   accuracyText: {fileID: 346539630}
@@ -1711,7 +1760,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SongManager
   beatsShownInAdvance: 3
   MusicNotePrefab: {fileID: 4740130558370457881, guid: e49edd462d0b84d739b0e1e84d3027a2, type: 3}
-  NoteMissZone: {fileID: 0}
   StartLine: {fileID: 696566393}
   bpm: 120
   notes:
@@ -1973,6 +2021,7 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 515963597}
   - {fileID: 1868203640}
   - {fileID: 1013082149}
   - {fileID: 519420032}
