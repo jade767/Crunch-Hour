@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class SongSelect : MonoBehaviour
 {
-    public static SongSelect instance;
     public SongInfoSO selectedSong;
+    [SerializeField] private GameInfoSO gameInfo;
     [SerializeField] private TextMeshProUGUI songNameText;
     [SerializeField] private TextMeshProUGUI difficultyText;
     [SerializeField] private TextMeshProUGUI durationText;
@@ -19,21 +19,11 @@ public class SongSelect : MonoBehaviour
         SongEntry.onSelectSong -= SelectedSong;
     }
 
-    private void Awake()
-    {
-        if (!instance)
-        {
-            instance = this;
-            DontDestroyOnLoad(this);
-        } else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void SelectedSong(SongInfoSO songInfo)
     {
         selectedSong = songInfo;
+        gameInfo.currentPlayingSongInfo = selectedSong;
+        
         // update song details tab
         songNameText.text = selectedSong.songName;
         difficultyText.text = "Difficulty: " + selectedSong.difficultyLevel;

@@ -8,6 +8,10 @@ public class ScoreData : ScriptableObject
     public float flowstate;
     public float combo;
     public float highscore;
+    public int perfectNotesHit;
+    public int goodNotesHit;
+    public int badNotesHit;
+    public int missedNotes;
     //A-F score cutoffs, cutoffs will have to be updated later to make any sence
     public float ACutOff = 30000;
     public float BCutOff = 25000;
