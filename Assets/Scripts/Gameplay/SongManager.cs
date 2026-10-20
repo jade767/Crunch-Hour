@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using Unity.VectorGraphics;
 
 [RequireComponent(typeof(AudioSource))]
 public class SongManager : MonoBehaviour
@@ -41,10 +42,11 @@ public class SongManager : MonoBehaviour
     // -- Song Information -- (should probably make a scriptable object for each song)
 
     [Header("Song Information")]
+    [SerializeField] private GameInfoSO gameInfo;
     // beats per minute of the song
     [SerializeField] private float bpm;
     // keep all the positon-in-beats of notes in the song
-    [SerializeField] private float[] notes;
+    [SerializeField] private Note[] notes;
     // the index of the next note to be spawned
     private int nextIndex = 0;
 
@@ -87,15 +89,22 @@ public class SongManager : MonoBehaviour
         // calculate the position in beats
         songPosInBeats = songPosition / secPerBeat;
 
-        if (nextIndex < notes.Length && notes[nextIndex] < songPosInBeats + beatsShownInAdvance)
+        if (songActive && !musicSource.isPlaying)
+        {
+            Debug.Log("Song ended");
+            songActive = false;
+            SceneLoader.instance.GoToScene("ResultsScreen", SceneLoader.TransitionType.FadeBlack);
+        } else if (nextIndex < notes.Length && notes[nextIndex].beatPos < songPosInBeats + beatsShownInAdvance)
         {
             GameObject obj = Instantiate(MusicNotePrefab);
             // initialize the fields of the music note
             MusicNote musicNote = obj.GetComponent<MusicNote>();
-            float newX = notes[nextIndex] * unitsPerBeat;
+            float newX = notes[nextIndex].beatPos * unitsPerBeat;
             int rowIndex = (int) (newX / rowLength) % MaxRows;
             obj.transform.position = noteStartPos + new Vector2(newX % rowLength, 
                 -RowSpacing * rowIndex);
+            musicNote.IsHoldNote = notes[nextIndex].isHoldNote;
+            musicNote.IsHoldEnd = notes[nextIndex].isHoldEnd;
             //musicNote.BeatOfThisNote = notes[nextIndex];
             //musicNote.BeatsShownInAdvance = beatsShownInAdvance;
 
@@ -107,13 +116,9 @@ public class SongManager : MonoBehaviour
 
     public void StartSong()
     {
-        SongSelect songSelect = FindAnyObjectByType<SongSelect>();
-        if (!songSelect)
-        {
-            Debug.Log("Could not find SongSelect object in scene.");
-            return;
-        }
-        musicSource.generator = songSelect.selectedSong.audioClip;
+        SongInfoSO selectedSong = gameInfo.currentPlayingSongInfo;
+        musicSource.generator = selectedSong.audioClip;
+        notes = selectedSong.notes;
 
         onSongStarted?.Invoke();
         
@@ -121,7 +126,15 @@ public class SongManager : MonoBehaviour
         dsptimesong = (float) AudioSettings.dspTime;
 
         // play the song
-        musicSource.Play();
         songActive = true;
+        musicSource.Play();
     }
+}
+
+[Serializable]
+public class Note
+{
+    public float beatPos;
+    public bool isHoldNote;
+    public bool isHoldEnd;
 }

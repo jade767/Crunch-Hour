@@ -21,7 +21,7 @@ public class NoteJudgement : MonoBehaviour
     // total notes passed by, whether hit or not
     private int totalNotesAdvanced;
     private bool songActive;
-    private List<Transform> musicNotesInTriggerLine = new List<Transform>();
+    private List<MusicNote> musicNotesInTriggerLine = new List<MusicNote>();
 
     [Header("Moving Trigger Line")]
     private float startX;
@@ -94,16 +94,22 @@ public class NoteJudgement : MonoBehaviour
         scoreData.combo = 0;
         scoreData.flowstate = 1;
         accuracyText.text = "MISS";
+        scoreData.missedNotes++;
         //AdvanceTriggerLine();
     }
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (musicNotesInTriggerLine.Count <= 0 || !context.started) return;
+        if (musicNotesInTriggerLine.Count <= 0 || (!!context.started && !!context.canceled)) return;
 
-        Transform incomingNote = musicNotesInTriggerLine[0];
+        MusicNote incomingNote = musicNotesInTriggerLine[0];
         musicNotesInTriggerLine.RemoveAt(0);
         Destroy(incomingNote.gameObject);
+        if (incomingNote.IsHoldEnd && context.started)
+        {
+            NoteMissed();
+            return;
+        }
         
         float distance = incomingNote.transform.position.x - TriggerLine.transform.position.x;
         float absDistance = Math.Abs(distance);
@@ -113,16 +119,19 @@ public class NoteJudgement : MonoBehaviour
             accuracyText.text = distance + ": Perfect";
             scoreData.flowstate += 0.03f;
             scoreData.score += Mathf.Floor(50 * scoreData.flowstate);
+            scoreData.perfectNotesHit++;
         } else if (absDistance <= goodInterval)
         {
             accuracyText.text = distance + ": Good";
             scoreData.flowstate += 0.02f;
             scoreData.score += Mathf.Floor(30 * scoreData.flowstate);
+            scoreData.goodNotesHit++;
         } else
         {
             accuracyText.text = distance + ": Bad";
             scoreData.flowstate += 0.01f;
             scoreData.score += Mathf.Floor(10 * scoreData.flowstate);
+            scoreData.badNotesHit++;
         }
         
         scoreData.combo += 1;
@@ -133,7 +142,7 @@ public class NoteJudgement : MonoBehaviour
     {
         if (collision.CompareTag("MusicNote"))
         {
-            musicNotesInTriggerLine.Add(collision.transform);
+            musicNotesInTriggerLine.Add(collision.GetComponent<MusicNote>());
         }
     }
 
@@ -141,7 +150,7 @@ public class NoteJudgement : MonoBehaviour
     {
         if (collision.gameObject != null && collision.CompareTag("MusicNote"))
         {
-            musicNotesInTriggerLine.Remove(collision.transform);
+            musicNotesInTriggerLine.Remove(collision.GetComponent<MusicNote>());
             NoteMissed();
             Destroy(collision.gameObject);
         }

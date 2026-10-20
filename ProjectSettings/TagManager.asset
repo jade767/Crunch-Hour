@@ -6,6 +6,7 @@ TagManager:
   tags:
   - MusicNote
   - MissZone
+  - ScreenTransition
   layers:
   - Default
   - TransparentFX

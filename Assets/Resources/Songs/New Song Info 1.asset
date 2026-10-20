@@ -13,6 +13,21 @@ MonoBehaviour:
   m_Name: New Song Info 1
   m_EditorClassIdentifier: Assembly-CSharp::SongInfoSO
   songName: test2
-  difficultyLevel: 2
-  audioClip: {fileID: 8300000, guid: 818ea696e4c3647129fb23aa10b4319c, type: 3}
-  notes: []
+  difficultyLevel: 0
+  audioClip: {fileID: 8300000, guid: 884521f9b0d054b83bbd6cdca7ebe73e, type: 3}
+  notes:
+  - beatPos: 0
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 1
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 2
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 3
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 4
+    isHoldNote: 0
+    isHoldEnd: 0

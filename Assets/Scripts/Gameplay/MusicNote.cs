@@ -3,22 +3,47 @@ using System;
 
 public class MusicNote : MonoBehaviour
 {
-    public Vector2 SpawnPos;
-    //public Vector2 RemovePos;
-    public float BeatOfThisNote;
-    //public float BeatsShownInAdvance;
+    [Header("Note Sprites")]
+    [SerializeField] private Sprite defaultNote;
+    [SerializeField] private Sprite startHoldNote;
+    [SerializeField] private Sprite endHoldNote;
 
-    // i'll need to get rid of this and replace it with a function that determines
-    // the note's position on the screen based on the beat of the note
-    /*
-    void Update()
+    private SpriteRenderer spriteRenderer;
+    private bool isHoldNote;
+    private bool isHoldEnd;
+    public bool IsHoldNote
     {
-        Vector2 newPos = Vector2.Lerp(
-            SpawnPos,
-            RemovePos,
-            (BeatsShownInAdvance - (BeatOfThisNote - SongManager.songPosInBeats)) / BeatsShownInAdvance
-        );
-        transform.position = new Vector3(newPos.x, newPos.y, 0);
+        get
+        {
+            return isHoldNote;
+        }
+        set
+        {
+            isHoldNote = value;
+            if (isHoldNote)
+            {
+                spriteRenderer.sprite = startHoldNote;
+            }
+        }
     }
-    */
+    public bool IsHoldEnd
+    {
+        get {
+
+            return isHoldEnd;
+        }
+        set
+        {
+            isHoldEnd = value;
+            if (isHoldEnd)
+            {
+                spriteRenderer.sprite = endHoldNote;
+            }
+        }
+    }
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 }
