@@ -19,9 +19,9 @@ MonoBehaviour:
   - beatPos: 0.3
     isHoldNote: 0
     isHoldEnd: 0
-  - beatPos: 0.5
+  - beatPos: 1
     isHoldNote: 1
     isHoldEnd: 0
-  - beatPos: 1
+  - beatPos: 2
     isHoldNote: 0
     isHoldEnd: 1
