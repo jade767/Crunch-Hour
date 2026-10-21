@@ -25,6 +25,7 @@ public class SongEntry : MonoBehaviour
     public static event Action<SongInfoSO> onSelectSong;
     public void OnSelected()
     {
+        SfxManager.OnSelect?.Invoke();
         onSelectSong?.Invoke(songInfo);
     }
 }

@@ -135,6 +135,7 @@ public class NoteJudgement : MonoBehaviour
         }
         
         scoreData.combo += 1;
+        SfxManager.OnNoteHit?.Invoke();
         scoreData.CheckHighScore();
     }
 

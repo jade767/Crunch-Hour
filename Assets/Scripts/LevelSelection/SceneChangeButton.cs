@@ -1,5 +1,6 @@
 using Unity.VectorGraphics;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SceneChangeButton : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class SceneChangeButton : MonoBehaviour
         {
             Debug.LogError("Could not find SceneLoader in scene.");
         }
+        SfxManager.OnSelect?.Invoke();
         sceneLoader.GoToScene(destination);
     }
 }
