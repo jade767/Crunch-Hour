@@ -12,28 +12,217 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 515062212704941dea377c073f631f21, type: 3}
   m_Name: Song1
   m_EditorClassIdentifier: Assembly-CSharp::SongInfoSO
-  songName: Placeholder
+  songName: Cram Time
   difficultyLevel: 1
   audioClip: {fileID: 8300000, guid: a3afb9ce7532c434abcdb31fc9c2408c, type: 3}
   notes:
-  - beatPos: 0
+  - beatPos: 9
     isHoldNote: 0
     isHoldEnd: 0
-  - beatPos: 0.5
+  - beatPos: 9.5
     isHoldNote: 0
     isHoldEnd: 0
-  - beatPos: 1
-    isHoldNote: 0
-    isHoldEnd: 0
-  - beatPos: 1.5
-    isHoldNote: 0
-    isHoldEnd: 0
-  - beatPos: 4
+  - beatPos: 10.5
     isHoldNote: 1
     isHoldEnd: 0
-  - beatPos: 5.5
+  - beatPos: 11
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 12.5
     isHoldNote: 0
     isHoldEnd: 0
-  - beatPos: 6.5
+  - beatPos: 13
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 13.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 14.2
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 15.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 16
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 16.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 17.5
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 18.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 19
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 19.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 20.5
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 21.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 22
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 22.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 23.5
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 24.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 25
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 25.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 26.5
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 27.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 28
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 28.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 29
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 30
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 31
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 31.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 32.5
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 33.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 34
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 34.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 35.5
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 36.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 37
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 37.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 38.5
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 39.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 40.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 41
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 43
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 44
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 45.3
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 45.9
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 46.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 47
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 48
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 49
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 49.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 50
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 51
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 52
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 52.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 53.5
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 54.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 55
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 55.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 56.5
+    isHoldNote: 1
+    isHoldEnd: 0
+  - beatPos: 57.5
+    isHoldNote: 0
+    isHoldEnd: 1
+  - beatPos: 58.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 59
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 60
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 60.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 61
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 61.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 62.5
+    isHoldNote: 0
+    isHoldEnd: 0
+  - beatPos: 63
     isHoldNote: 0
     isHoldEnd: 0

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using Unity.VectorGraphics;
+using TMPro;
 
 [RequireComponent(typeof(AudioSource))]
 public class SongManager : MonoBehaviour
@@ -20,11 +21,11 @@ public class SongManager : MonoBehaviour
 
     // -- Events --
     public static Action<GameObject> onNoteCreated;
-    public static Action onSongStarted; // should contain a songobject type at some point
+    public static Action<SongInfoSO> onSongStarted; // should contain a songobject type at some point
 
     [Header("Game Object References")]
     [SerializeField] private GameObject MusicNotePrefab;
-    [SerializeField] private GameObject StartLine;
+    [SerializeField] private TextMeshProUGUI countdownText;
     
 
     // -- Song Position Tracking --
@@ -43,6 +44,7 @@ public class SongManager : MonoBehaviour
 
     [Header("Song Information")]
     [SerializeField] private GameInfoSO gameInfo;
+    [SerializeField] private SongInfoSO defaultSong;
     // beats per minute of the song
     [SerializeField] private float bpm;
     // keep all the positon-in-beats of notes in the song
@@ -91,7 +93,6 @@ public class SongManager : MonoBehaviour
 
         if (songActive && !musicSource.isPlaying)
         {
-            Debug.Log("Song ended");
             songActive = false;
             SceneLoader.instance.GoToScene("ResultsScreen", SceneLoader.TransitionType.FadeBlack);
         } else if (nextIndex < notes.Length && notes[nextIndex].beatPos < songPosInBeats + beatsShownInAdvance)
@@ -114,13 +115,38 @@ public class SongManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        StartCoroutine(StartSongCountdown());
+    }
+
+    IEnumerator StartSongCountdown()
+    {
+        Animator countdownAnimator = countdownText.GetComponent<Animator>();
+        for (int i = 3; i > 0; i--)
+        {
+            countdownText.text = i.ToString();
+            countdownAnimator.SetTrigger("TextBounceLarge");
+            yield return new WaitForSeconds(1);
+        }
+        countdownText.text = "";
+        
+        StartSong();
+    }
+
     public void StartSong()
     {
         SongInfoSO selectedSong = gameInfo.currentPlayingSongInfo;
+        if (!selectedSong)
+        {
+            Debug.Log("Song info not found in GameInfo, switching to default song");
+            selectedSong = defaultSong;
+            gameInfo.currentPlayingSongInfo = defaultSong;
+        }
         musicSource.generator = selectedSong.audioClip;
         notes = selectedSong.notes;
 
-        onSongStarted?.Invoke();
+        onSongStarted?.Invoke(selectedSong);
         
         // record the time when the song starts
         dsptimesong = (float) AudioSettings.dspTime;

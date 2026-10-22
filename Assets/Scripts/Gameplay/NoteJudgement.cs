@@ -10,16 +10,17 @@ using System.Linq;
 public class NoteJudgement : MonoBehaviour
 {
     [SerializeField] private GameObject TriggerLine;
+    private Animator animator;
+
+    // Events
+    public static Action<float> onScoreUpdated;
+    public static Action<int> onComboUpdated;
     
     [Header("Judgement Distance Intervals")]
     [SerializeField] private float perfectInterval;
     [SerializeField] private float goodInterval;
     [SerializeField] private ScoreData scoreData;
 
-    // total notes successfully hit
-    private int totalNotesHit;
-    // total notes passed by, whether hit or not
-    private int totalNotesAdvanced;
     private bool songActive;
     private List<MusicNote> musicNotesInTriggerLine = new List<MusicNote>();
 
@@ -35,6 +36,7 @@ public class NoteJudgement : MonoBehaviour
     // maybe delete this later
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI accuracyText;
+    [SerializeField] private TextMeshProUGUI comboText;
 
     private void OnEnable()
     {
@@ -49,6 +51,7 @@ public class NoteJudgement : MonoBehaviour
     private void Awake()
     {
         Physics2D.callbacksOnDisable = false;
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -83,7 +86,7 @@ public class NoteJudgement : MonoBehaviour
         }
     }
 
-    private void SongStarted()
+    private void SongStarted(SongInfoSO song)
     {
         songActive = true;
     }
@@ -92,7 +95,8 @@ public class NoteJudgement : MonoBehaviour
     private void NoteMissed()
     {
         scoreData.combo = 0;
-        scoreData.flowstate = 1;
+        onComboUpdated?.Invoke((int) scoreData.combo);
+        //scoreData.flowstate = 1;
         accuracyText.text = "MISS";
         scoreData.missedNotes++;
         //AdvanceTriggerLine();
@@ -100,43 +104,54 @@ public class NoteJudgement : MonoBehaviour
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (musicNotesInTriggerLine.Count <= 0 || (!!context.started && !!context.canceled)) return;
+        if (context.started)
+        {
+            animator.SetTrigger("Hit");
+        } else if (context.canceled)
+        {
+            animator.SetTrigger("Release");
+        }
+        if (musicNotesInTriggerLine.Count <= 0 || (!context.started && !context.canceled)) return;
 
         MusicNote incomingNote = musicNotesInTriggerLine[0];
         musicNotesInTriggerLine.RemoveAt(0);
-        Destroy(incomingNote.gameObject);
+        incomingNote.DestroyHitNote();
+        //Destroy(incomingNote.gameObject);
         if (incomingNote.IsHoldEnd && context.started)
         {
             NoteMissed();
             return;
-        }
-        
-        float distance = incomingNote.transform.position.x - TriggerLine.transform.position.x;
-        float absDistance = Math.Abs(distance);
+        } else if ((context.canceled && incomingNote.IsHoldEnd) || context.started)
+        {
+            float distance = incomingNote.transform.position.x - TriggerLine.transform.position.x;
+            float absDistance = Math.Abs(distance);
 
-        if (absDistance <= perfectInterval)
-        {
-            accuracyText.text = distance + ": Perfect";
-            scoreData.flowstate += 0.03f;
-            scoreData.score += Mathf.Floor(50 * scoreData.flowstate);
-            scoreData.perfectNotesHit++;
-        } else if (absDistance <= goodInterval)
-        {
-            accuracyText.text = distance + ": Good";
-            scoreData.flowstate += 0.02f;
-            scoreData.score += Mathf.Floor(30 * scoreData.flowstate);
-            scoreData.goodNotesHit++;
-        } else
-        {
-            accuracyText.text = distance + ": Bad";
-            scoreData.flowstate += 0.01f;
-            scoreData.score += Mathf.Floor(10 * scoreData.flowstate);
-            scoreData.badNotesHit++;
+            if (absDistance <= perfectInterval)
+            {
+                accuracyText.text = "PERFECT";
+                //scoreData.flowstate += 0.03f;
+                scoreData.score += Mathf.Floor(50);// * scoreData.flowstate);
+                scoreData.perfectNotesHit++;
+            } else if (absDistance <= goodInterval)
+            {
+                accuracyText.text = "GOOD";
+                //scoreData.flowstate += 0.02f;
+                scoreData.score += Mathf.Floor(30);// * scoreData.flowstate);
+                scoreData.goodNotesHit++;
+            } else
+            {
+                accuracyText.text = "BAD";
+                //scoreData.flowstate += 0.01f;
+                scoreData.score += Mathf.Floor(10);// * scoreData.flowstate);
+                scoreData.badNotesHit++;
+            }
+            
+            scoreData.combo += 1;
+            onComboUpdated?.Invoke((int) scoreData.combo);
+            onScoreUpdated?.Invoke(scoreData.score);
+            SfxManager.OnNoteHit?.Invoke();
+            scoreData.CheckHighScore();
         }
-        
-        scoreData.combo += 1;
-        SfxManager.OnNoteHit?.Invoke();
-        scoreData.CheckHighScore();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -151,9 +166,10 @@ public class NoteJudgement : MonoBehaviour
     {
         if (collision.gameObject != null && collision.CompareTag("MusicNote"))
         {
-            musicNotesInTriggerLine.Remove(collision.GetComponent<MusicNote>());
+            MusicNote note = collision.GetComponent<MusicNote>();
+            musicNotesInTriggerLine.Remove(note);
             NoteMissed();
-            Destroy(collision.gameObject);
+            note.DestroyMissNote();
         }
     }
 }

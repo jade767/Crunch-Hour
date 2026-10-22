@@ -9,6 +9,7 @@ public class MusicNote : MonoBehaviour
     [SerializeField] private Sprite endHoldNote;
 
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
     private bool isHoldNote;
     private bool isHoldEnd;
     public bool IsHoldNote
@@ -45,5 +46,21 @@ public class MusicNote : MonoBehaviour
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+    }
+
+    public void DestroyHitNote()
+    {
+        animator.SetTrigger("Hit");
+    }
+
+    public void DestroyMissNote()
+    {
+        animator.SetTrigger("Miss");
+    }
+
+    public void AnimationEnded()
+    {
+        Destroy(gameObject);
     }
 }

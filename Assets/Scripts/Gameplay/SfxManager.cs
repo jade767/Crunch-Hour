@@ -60,7 +60,7 @@ public class SfxManager : MonoBehaviour
 
     private void UpdateMusic(Scene scene)
     {
-        if (scene.name == "MainMenu" || scene.name == "SongSelect")
+        if (scene.name == "MainMenu" || scene.name == "SongSelect" || scene.name == "Tutorial")
         {
             if (!music.isPlaying)
             {
